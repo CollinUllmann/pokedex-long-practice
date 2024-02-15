@@ -17,6 +17,8 @@ class Pokemon(db.Model):
   encounter_rate = db.Column(db.Integer, nullable=True)
   catch_rate = db.Column(db.Integer, nullable=True)
 
+  item = db.relationship('Items', back_populates='pokemon')
+
   def to_dict(self):
     return {
       'number': self.number,
@@ -35,14 +37,33 @@ class Pokemon(db.Model):
 class PokemonType(db.Model):
   __tablename__ = 'pokemon_types'
 
-  type = db.Column(db.String(255), primary_key=True, nullable=False)
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(255), nullable=False)
+
+  def to_dict(self):
+    return {
+      'type': self.name
+    }
 
 
 class Items(db.Model):
   __tablename__ = 'items'
 
+  id = db.Column(db.Integer, primary_key=True)
   happiness = db.Column(db.Integer)
-  imageUrl = db.Column(db.String(255), nullable=False)
+  image_url = db.Column(db.String(255), nullable=False)
   name = db.Column(db.String(255), nullable=False)
   price = db.Column(db.Integer, nullable=False)
-  pokemonId = db.Column(db.Integer, nullable=False)
+  pokemonId = db.Column(db.Integer, db.ForeignKey('pokemon.number'), nullable=False)
+
+  pokemon = db.relationship('pokemon', back_populates='items')
+
+  def to_dict(self):
+    return {
+      'id': self.id,
+      'happiness': self.happiness,
+      'imageUrl': self.image_url,
+      'name': self.name,
+      'price': self.price,
+      'pokemonId': self.pokemonId
+    }

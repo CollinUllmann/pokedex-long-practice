@@ -7,7 +7,7 @@ from .config import Configuration
 from flask import Flask
 from .models import db
 from flask_migrate import Migrate
-from .routes import pokemon_routes
+from .routes import pokemon_routes, item_routes
 
 app = Flask(__name__)
 app.config.from_object(Configuration)
@@ -17,6 +17,8 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 app.register_blueprint(pokemon_routes, url_prefix='/api/pokemon')
+app.register_blueprint(item_routes, url_prefix='/api/items')
+
 
 # after request code for CSRF token injection
 @app.after_request
